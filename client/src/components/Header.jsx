@@ -18,11 +18,11 @@ export default function Header() {
                 <FaSearch className='text-slate-500'/>
             </form>
             
-            <ul className='flex gap-5'>
+            <ul className='flex gap-5 '>
                 <CustomLink href='/home' className='hidden sm:inline' title="Home"/>
                 <CustomLink href='/profile' className='hidden sm:inline' title="Profile"/>
                 <CustomLink href='/about' className='hidden sm:inline' title="About"/>
-                <CustomLink href='/Sign-in' className='' title="SignIn"/>
+                <CustomLink href='/sign-in' className='' title="Sign In"/>
             </ul>
         </div>
         
