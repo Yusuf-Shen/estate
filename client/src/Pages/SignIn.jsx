@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {signInStart, signInSuccess, signInFailure} from '../redux/user/userSlice.js'
+import GAuth from '../components/GAuth.jsx';
 
 
 export default function SignIn() {
@@ -52,6 +53,7 @@ export default function SignIn() {
         disabled:opacity-80'>  
           {loading ? "Loadong..." : "Sign In"}
         </button> 
+        <GAuth/>
       </form>
       <div className='flex gap-3 my-5'>
         <p>Don't have account?</p>

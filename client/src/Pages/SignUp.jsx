@@ -1,6 +1,7 @@
 import { data } from 'autoprefixer';
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import GAuth from '../components/GAuth';
 
 export default function SignUp() {
   const[formData,setFormData] = useState();
@@ -63,6 +64,7 @@ export default function SignUp() {
         disabled:opacity-80'>  
           {loading ? 'Loading...' : 'Sign up'} 
         </button> 
+        <GAuth/>
       </form>
       <div className='flex gap-3 mt-6'>
         <p>Have an account?</p>

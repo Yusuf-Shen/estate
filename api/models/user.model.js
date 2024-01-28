@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      default:
+        "https://api-private.atlassian.com/users/2746d5624764ee676c08cdd3bfb77761/avatar",
+    },
   },
   { timestamps: true }
 );
