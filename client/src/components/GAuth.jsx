@@ -13,7 +13,7 @@ export default function GAuth() {
         const auth = getAuth(app);    
 
         const result = await signInWithPopup(auth, provider);
-        console.log(result);
+        
         const res = await fetch('api/auth/google', {
             method: 'POST',
             headers:{
@@ -25,7 +25,7 @@ export default function GAuth() {
 
         
         const data = await res.json();
-        console.log(data);
+       
         dispatch(signInSuccess(data));
         navigate('/home');
         } catch (error) {
