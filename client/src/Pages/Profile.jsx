@@ -10,8 +10,8 @@ export default function Profile() {
   const [filePerc,setFilePerc] = useState(0);
   const [fileUploadError,setFileUploadError] = useState(false);
   const [formData,setFormData] = useState({});
-  console.log(formData);
-  console.log(fileUploadError);
+  
+  
 //   // Craft rules based on data in your Firestore database
 // // allow write: if firestore.get(
 // //    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
@@ -46,6 +46,7 @@ export default function Profile() {
       },
       (error) => {
         setFileUploadError(true);
+        console.log(fileUploadError);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then
@@ -55,6 +56,7 @@ export default function Profile() {
       }
     );
   };
+  console.log(formData);
 
   return (
     <div className="p-3 max-w-lg mx-auto ">
@@ -63,7 +65,7 @@ export default function Profile() {
       <form className="flex flex-col gap-4 ">
         <input onChange={(e) => setFile(e.target.files[0])} type="file" ref={fileRef} hidden accept="image/*"/>
         <img onClick={()=> fileRef.current.click() } 
-        src= {formData.avatar || currentUser.avatar}  alt="avatar" 
+        src= {currentUser.avatar || formData.avatar }  alt="avatar" 
         className="rounded-full h-24 w-24 object-cover self-center my-2 cursor-pointer"/>
         <p className="text-sm text-center">
           {fileUploadError ? (
