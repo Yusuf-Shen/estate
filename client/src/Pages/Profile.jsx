@@ -1,17 +1,22 @@
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch} from "react-redux"
 import { MdEdit } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import{getStorage, uploadBytesResumable, ref, getDownloadURL} from 'firebase/storage'
 import { app } from "../firebase";
+import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/user/userSlice";
 export default function Profile() {
   const fileRef = useRef(null);
-  const {currentUser} = useSelector(state => state.user);
   const [file,setFile] = useState(undefined);
   const [filePerc,setFilePerc] = useState(0);
   const [fileUploadError,setFileUploadError] = useState(false);
   const [formData,setFormData] = useState({});
+  const {currentUser, loading, error} = useSelector(state => state.user);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const dispatch =  useDispatch();
   console.log(formData);
-  console.log(currentUser);
+  
+
+  
   
   
 //   // Craft rules based on data in your Firestore database
@@ -58,16 +63,48 @@ export default function Profile() {
       }
     );
   };
+
+  //this  set the updated information inside a form.
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    })
+  };
+
+  // This is update function frontend
+  const handleSumbit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`,{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if(data.message === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
+  }
   
 
   return (
     <div className="p-3 max-w-lg mx-auto ">
       <h1 className='text-3xl text-center font-semibold my-7'>Profile</h1>
       {/* <MdEdit onClick={()=> fileRef.current.click() }  ref= {fileRef} className="cursor-pointer absolute sm: ml-72 mt-20" /> */}
-      <form className="flex flex-col gap-4 ">
+      <form onSubmit={handleSumbit} className="flex flex-col gap-4 ">
         <input onChange={(e) => setFile(e.target.files[0])} type="file" ref={fileRef} hidden accept="image/*"/>
         <img onClick={()=> fileRef.current.click() } 
-        src= {currentUser.avatar || formData.avatar }  alt="avatar" 
+        src= { currentUser.avatar || formData.avatar}  alt="avatar" 
         className="rounded-full h-24 w-24 object-cover self-center my-2 cursor-pointer"/> 
         <p className="text-sm text-center">
           {fileUploadError ? (
@@ -83,15 +120,18 @@ export default function Profile() {
             ''
           )}
         </p>
-        <input placeholder='userName' type='text' className='border rounded-lg p-3'id="username"/>
-        <input placeholder='Email' type='text' className=' border rounded-lg p-3'id="email"/>
-        <input placeholder='password' type='text' className=' border rounded-lg p-3'id="passord"/>
-        <button className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">update</button>
+        <input  onChange={handleChange} defaultValue={currentUser.username}  placeholder='userName' type='text' className='border rounded-lg p-3'id="username"/>
+        <input onChange={handleChange} defaultValue={currentUser.email} placeholder='Email' type='text' className=' border rounded-lg p-3'id="email"/>
+        <input  placeholder='password' type='text' className=' border rounded-lg p-3'id="passord"/>
+        <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
+          {loading ? 'Updating...' : 'update'}
+        </button>
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-700 cursor-pointer">Delete account</span>
         <span className="text-red-700 cursor-pointer">Sign out</span>
       </div>
+      <p className="text-green-700">{updateSuccess ? 'User is Updated Successfully!' : ''}</p>
     </div>
     
   )
