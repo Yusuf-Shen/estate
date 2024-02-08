@@ -47,6 +47,18 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    singOutStart: (state) => {
+      state.loading = true;
+    },
+    singOutSuccess: (state) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    },
+    singOutFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
 });
 export const {
@@ -59,5 +71,8 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  singOutFailure,
+  singOutStart,
+  singOutSuccess,
 } = userSlice.actions; // the createSlice automatically create the action creator
 export default userSlice.reducer;
