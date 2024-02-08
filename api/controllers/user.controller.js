@@ -54,3 +54,14 @@ export const updatePassword = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deletUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "You only Delete your own Account!!!"));
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(201).json("User has been Deleted!").clearCookie("access_token");
+  } catch (error) {
+    next(error);
+  }
+};

@@ -3,7 +3,7 @@ import { MdEdit } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import{getStorage, uploadBytesResumable, ref, getDownloadURL} from 'firebase/storage'
 import { app } from "../firebase";
-import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/user/userSlice";
+import { updateUserStart, updateUserSuccess, updateUserFailure,deleteUserFailure,deleteUserStart,deleteUserSuccess } from "../redux/user/userSlice";
 export default function Profile() {
   const fileRef = useRef(null);
   const [file,setFile] = useState(undefined);
@@ -85,7 +85,7 @@ export default function Profile() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if(data.message === false) {
+      if(data.success === false) {
         dispatch(updateUserFailure(data.message));
         return;
       }
@@ -93,6 +93,24 @@ export default function Profile() {
       setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  }
+
+  //this is the delete function:
+  const handleDelete = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+        method:'DELETE',
+      });
+      const data = await res.json();
+      if(data.success === false){
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   }
   
@@ -128,7 +146,7 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
+        <span onClick={handleDelete} className="text-red-700 cursor-pointer">Delete account</span>
         <span className="text-red-700 cursor-pointer">Sign out</span>
       </div>
       <p className="text-green-700">{updateSuccess ? 'User is Updated Successfully!' : ''}</p>
