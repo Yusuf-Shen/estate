@@ -41,7 +41,7 @@ const listingSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-    }, // sale or rent
+    }, // house or apartment.
     offer: {
       type: Boolean,
       required: true,
