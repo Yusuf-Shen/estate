@@ -6,9 +6,12 @@ import { app } from "../firebase";
 import { updateUserStart, updateUserSuccess, updateUserFailure,deleteUserFailure,deleteUserStart,deleteUserSuccess, singOutStart,singOutSuccess,singOutFailure } from "../redux/user/userSlice";
 import { Link } from "react-router-dom";
 import { CardBody,CardContainer,CardItem } from "../components/ui/3d-card.tsx";
-import DeleteButton from "../components/ui/DeleteButton.jsx";
 import { Button } from "@chakra-ui/react";
-import { IoIosArrowRoundForward } from "react-icons/io";
+
+// this is component of button which need import
+
+import React from 'react'
+import DeleteButton from "../components/ui/DeleteButton.jsx";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -21,6 +24,7 @@ export default function Profile() {
   const [showListingError, setListingError] = useState(false); // show listing error
   const [userListings,setUserListings] = useState([]); // user listings
   const dispatch =  useDispatch();
+ 
   console.log(formData);
   
 
@@ -149,10 +153,13 @@ export default function Profile() {
         return;
       }
       setUserListings(data);
+      console.log(data);
     } catch (error) {
       setListingError(true);
     }
   }
+
+
 
   
 
@@ -220,14 +227,14 @@ export default function Profile() {
                       translateZ="50"
                       className="text-xl font-bold text-neutral-600 dark:text-white"
                     >
-                      <p>{listing.name}</p>
+                      {listing.name}
                     </CardItem>
                     <CardItem
                       as="p"
                       translateZ="60"
                       className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
                     >
-                      <p>{listing.address}</p>
+                      {listing.address}
                     </CardItem>
                     <CardItem translateZ="100" className="w-auto mt-3">
                       <img
@@ -242,8 +249,11 @@ export default function Profile() {
                       <CardItem
                         translateZ={20}
                         className=" ml-3 py-2  text-xs font-normal dark:text-white"
-                      >
-                        <DeleteButton imageId={`${listing._id}`}/> 
+                      > 
+                        <DeleteButton listingId={`${listing._id}`} 
+                        onConfirmDelete={(deletedId) => 
+                        setUserListings(currentListings => 
+                        currentListings.filter(listing => listing._id !== deletedId))}/>
                       </CardItem>
                       
                       <CardItem

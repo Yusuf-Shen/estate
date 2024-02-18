@@ -7,31 +7,41 @@ import {
     AlertDialogOverlay,
     useDisclosure,
     Button,
+    useToast,
   } from '@chakra-ui/react'
   import React from 'react'
   
-import { useSelector } from 'react-redux'
 
-export default function DeleteButton({imageId}) {
+
+export default function DeleteButton({listingId,onConfirmDelete}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef()
+    const toast = useToast();
     
-    const {currentUser} = useSelector(state => state.user);
-    const handlerDeleteImage = async () => {
+    
+    const handlerDeleteListing = async (listingId) => {
       try {
-        const res = await fetch(`/api/listing/delete/${currentUser._id}/${imageId}`,{
+        const res = await fetch(`/api/listing/delete/${listingId}`,{
           method:'DELETE',
         });
         const data = await res.json();
         if(data.success === false){
-          dispatch(deleteUserFailure(data.message));
+          console.log(data.message);
           return;
         }
         if(data.success === false){
           console.log("delete error");
           return;
         }
+        onConfirmDelete(listingId); 
         onClose();
+        toast({
+          title:  'Your Listing Has Been Deleted',
+          status: 'success',
+          duration: 2000,
+          position:'bottom',
+          isClosable: true,
+        })
         console.log("delete success");
       } catch (error) {
         console.log(error);
@@ -63,7 +73,7 @@ export default function DeleteButton({imageId}) {
                 <Button ref={cancelRef} onClick={onClose}>
                   Cancel
                 </Button>
-                <Button colorScheme='red' onClick={handlerDeleteImage} ml={3}>
+                <Button colorScheme='red' onClick={()=>handlerDeleteListing(listingId)} ml={3}>
                   Delete
                 </Button>
               </AlertDialogFooter>

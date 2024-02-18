@@ -154,12 +154,14 @@ export default function CreateListing() {
             
             setCloading(false);
             setError(false);
+
             // this is alert to inform user that listing successfully created.
             toast({
                 title: 'Listing created.',
                 description: "You've created your Listing .",
                 status: 'success',
                 duration: 1500,
+                position:'bottom',
                 isClosable: true,
             })
             navigate(`/listing/${data._id}`);  
