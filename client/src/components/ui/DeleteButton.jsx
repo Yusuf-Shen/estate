@@ -50,7 +50,7 @@ export default function DeleteButton({listingId,onConfirmDelete}) {
 
     return (
       <>
-        <Button size='sm' className='rounded-xl text-green-400' colorScheme='red' onClick={onOpen}>
+        <Button size='sm'  className='rounded-xl text-green-400 ' colorScheme='red' onClick={onOpen}>
           Delete →
         </Button>
   
