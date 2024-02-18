@@ -46,6 +46,10 @@ const listingSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    squareFootage: {
+      type: Number,
+      required: true,
+    },
     imageUrls: {
       type: Array,
       required: true,

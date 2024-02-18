@@ -5,6 +5,11 @@ import{getStorage, uploadBytesResumable, ref, getDownloadURL} from 'firebase/sto
 import { app } from "../firebase";
 import { updateUserStart, updateUserSuccess, updateUserFailure,deleteUserFailure,deleteUserStart,deleteUserSuccess, singOutStart,singOutSuccess,singOutFailure } from "../redux/user/userSlice";
 import { Link } from "react-router-dom";
+import { CardBody,CardContainer,CardItem } from "../components/ui/3d-card.tsx";
+import DeleteButton from "../components/ui/DeleteButton.jsx";
+import { Button } from "@chakra-ui/react";
+import { IoIosArrowRoundForward } from "react-icons/io";
+
 export default function Profile() {
   const fileRef = useRef(null);
   const [file,setFile] = useState(undefined);
@@ -13,6 +18,8 @@ export default function Profile() {
   const [formData,setFormData] = useState({});
   const {currentUser, loading, error} = useSelector(state => state.user);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingError, setListingError] = useState(false); // show listing error
+  const [userListings,setUserListings] = useState([]); // user listings
   const dispatch =  useDispatch();
   console.log(formData);
   
@@ -130,6 +137,23 @@ export default function Profile() {
       dispatch(singOutFailure(error.message));
     }
   }
+
+  //This is show listings function
+  const handleShowListings = async () =>{
+    setListingError(false);
+    try {
+      const res  =  await fetch(`/api/user/listings/${currentUser._id}`); // attention the id i s_id
+      const data = await res.json();
+      if(data.success === false){
+        setListingError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setListingError(true);
+    }
+  }
+
   
 
   return (
@@ -170,7 +194,76 @@ export default function Profile() {
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">Delete account</span>
         <span onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign out</span>
       </div>
-      <p className="text-green-700">{updateSuccess ? 'User is Updated Successfully!' : ''}</p>
+      <p className="text-green-700">
+        {updateSuccess ? 'User is Updated Successfully!' : ''}
+      </p>
+      <button onClick={handleShowListings} className="text-green-500 w-full ">
+        Show Listings
+      </button>
+      <p className="text-red-600"> {showListingError?"Error show listings": ''}</p>
+            
+      {/* These are  listing cards. */}
+      
+        {userListings&& userListings.length> 0 
+          && 
+          <div className="mx-auto">
+            <h1 className="text-center my-16 text-2xl font-semibold">Your Listings</h1>
+            {userListings.map((listing,index) => (
+              <div key={listing._id} className="mx-auto">
+                <CardContainer className="inter-var w-auto">
+                  <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl
+                  dark:hover:shadow-emerald-500/[0.1] dark:bg-black
+                    dark:border-white/[0.2] border-black/[0.1] 
+                    w-auto sm:w-[30rem] h-auto rounded-xl p-6 border "
+                  >
+                    <CardItem
+                      translateZ="50"
+                      className="text-xl font-bold text-neutral-600 dark:text-white"
+                    >
+                      <p>{listing.name}</p>
+                    </CardItem>
+                    <CardItem
+                      as="p"
+                      translateZ="60"
+                      className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+                    >
+                      <p>{listing.address}</p>
+                    </CardItem>
+                    <CardItem translateZ="100" className="w-auto mt-3">
+                      <img
+                        src={listing.imageUrls[0]}
+                        height="1000"
+                        width="1000"
+                        className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                        alt="thumbnail"
+                      />
+                    </CardItem>
+                    <div className="flex justify-between  mt-12">
+                      <CardItem
+                        translateZ={20}
+                        className=" ml-3 py-2  text-xs font-normal dark:text-white"
+                      >
+                        <DeleteButton imageId={`${listing._id}`}/> 
+                      </CardItem>
+                      
+                      <CardItem
+                        translateZ={20}
+                        
+                        className="px-4 py-2 rounded-xl text-white text-xs font-bold"
+                      >
+                        <Link to={`/listing/${listing._id}`}>
+                          <Button colorScheme='blue'  size='sm'>Edit →</Button> 
+                        </Link>
+                      </CardItem>
+                    </div>
+                  </CardBody>
+                </CardContainer>
+              </div>
+            ))}
+          </div>
+        }
+       
+      
     </div>
     
   )

@@ -1,9 +1,11 @@
 import { getDownloadURL, getStorage, uploadBytesResumable, ref } from 'firebase/storage';
 import React from 'react'
 import { useState } from 'react';
-import { app } from '../firebase';
+import { app } from '../firebase.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Button, ColorModeContext, color } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react'; // this is successfull message of creating listing.
 
 
 
@@ -18,6 +20,7 @@ export default function CreateListing() {
         typeOfProp:'',
         bedroom:1,
         bathroom:1,
+        squareFootage:1,
         regularPrice:10,
         offer:false,
         parking:false,
@@ -31,6 +34,8 @@ export default function CreateListing() {
     const {currentUser} = useSelector(state => state.user);
     //create nevigate
     const navigate = useNavigate();
+    //ui toast
+    const toast = useToast() // this is successfull message of creating listing.
     console.log(formData);
     const [imageUploadError, setImageUploadError] = useState(false);
 
@@ -47,12 +52,14 @@ export default function CreateListing() {
             })
             .catch((error) =>{
                 setImageUploadError("The image size not moren than 2MB");
+                console.log(error);
                 setIloading(false);
+                return;
             })
             
         } else {
             setImageUploadError("Upload Error");
-            
+            return;
         }
     }
     // store image into firebase
@@ -144,9 +151,19 @@ export default function CreateListing() {
                 setCloading(false);
                 return;
             }
+            
             setCloading(false);
             setError(false);
-            navigate(`/listing/${data._id}`);
+            // this is alert to inform user that listing successfully created.
+            toast({
+                title: 'Listing created.',
+                description: "You've created your Listing .",
+                status: 'success',
+                duration: 1500,
+                isClosable: true,
+            })
+            navigate(`/listing/${data._id}`);  
+            // when you sumbit the image to the database, the database will give you a new Unique ID
         } catch (error) {
             setCloading(false);
             setError(error.message);
@@ -230,13 +247,13 @@ export default function CreateListing() {
 
                     <div className='flex gap-2' id='typeOfProp'>
                         <select name='typeOfProp' className='form-control border 
-                            p-1 w-full rounded-lg' 
+                            p-1 w-full rounded-md' 
                             value={formData.typeOfProp}
                             onChange={handleChanger} 
                             id='typeOfProp'
                         >
                             <option>
-                                -Select Type of your Property- 
+                                Select Type of your Property
                             </option>
                             <option>
                                 House
@@ -265,6 +282,19 @@ export default function CreateListing() {
                         />
                         <p>BathRooms</p>
                     </div>
+                    <div className='flex items-center gap-3'>
+                        <input type='number' id='squareFootage' 
+                        className='p-3 w-20 sm:w-36 border 
+                        border-gray-300 rounded-lg' min='1' max='' required
+                          
+                          onChange={handleChanger}
+                        />
+                        <div className='flex flex-col items-center'>
+                            <p>Square Footage</p>
+                            <span className='text-xs'>(/m²)</span>
+                        </div>
+                        
+                    </div>
                     <div className='flex  items-center gap-3'>
                         <input type='number' id='regularPrice' className='p-3 w-36 border 
                         border-gray-300 rounded-lg' min='1' max='99999999'  required
@@ -288,11 +318,25 @@ export default function CreateListing() {
                       border-gray-300 rounded w-full' type='file' id='images' 
                         accept='image/*' multiple>
                     </input>
-                    <button onClick={handleImageUpload} type='button' disabled={iLoading} 
-                    className='uppercase text-green-700 border p-3 rounded-lg 
-                    hover:shadow-lg disabled:opacity-80 border-green-600'>
-                        {iLoading ? "uploading" : "upload"}
-                    </button>   
+                    <div className='my-1'>
+                        {iLoading
+                        ? 
+                         <Button onClick={handleImageUpload} type='button' disabled={iLoading} 
+                          className=' uppercase text-green-700 border p-3 rounded-lg 
+                          hover:shadow-lg disabled:opacity-80 border-green-600'
+                          isLoading loadingText='Uploading' colorScheme='green'
+                          size='md'
+                          variant='outline'
+                         />
+                        :<Button onClick={handleImageUpload} type='button' disabled={iLoading} 
+                          className='my-1 uppercase text-green-700 border p-3 rounded-lg 
+                          hover:shadow-lg disabled:opacity-80 border-green-600'
+                          variant='outline'colorScheme='green' >
+                            UPLOAD
+                         </Button>
+                        }
+                        {/* {iLoading ? "uploading" : "upload"} */}
+                    </div>   
                 </div>
                 <p className='text-red-600  text-sm'>{imageUploadError && imageUploadError}</p>
                 {

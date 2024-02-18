@@ -2,12 +2,14 @@ import { data } from 'autoprefixer';
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GAuth from '../components/GAuth';
+import { useToast } from '@chakra-ui/react';
 
 export default function SignUp() {
   const[formData,setFormData] = useState();
   const[error,setError] = useState(null);  //set the error state
   const[loading, setLoading] = useState(false); // respond after click sign up
   const navigate = useNavigate(); // initial the package called useNavigate.
+  const toast = useToast()
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -36,6 +38,13 @@ export default function SignUp() {
         }
         setLoading(false);
         setError(null);
+        toast({
+          title: 'Account created.',
+          description: "We've created your account for you.",
+          status: 'success',
+          duration: 1500,
+          isClosable: true,
+        })
         navigate('/sign-in');
     } catch (error) {
         setLoading(false);
