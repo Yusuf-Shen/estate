@@ -261,7 +261,7 @@ export default function Profile() {
                         
                         className="px-4 py-2 rounded-xl text-white text-xs font-bold"
                       >
-                        <Link to={`/listing/${listing._id}`}>
+                        <Link to={`/update-listing/${listing._id}`}>
                           <Button colorScheme='blue' className="p-4" size='sm'>Edit →</Button> 
                         </Link>
                       </CardItem>
