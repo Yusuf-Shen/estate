@@ -237,13 +237,15 @@ export default function Profile() {
                       {listing.address}
                     </CardItem>
                     <CardItem translateZ="100" className="w-auto mt-3">
-                      <img
-                        src={listing.imageUrls[0]}
-                        height="1000"
-                        width="1000"
-                        className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
-                        alt="thumbnail"
-                      />
+                      <Link to={`/listing/${listing._id}`}>
+                        <img
+                          src={listing.imageUrls[0]}
+                          height="1000"
+                          width="1000"
+                          className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                          alt="thumbnail"
+                        />
+                      </Link> 
                     </CardItem>
                     <div className="flex justify-between  mt-12">
                       <CardItem
