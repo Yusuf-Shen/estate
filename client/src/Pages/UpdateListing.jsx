@@ -20,8 +20,8 @@ export default function UpdateListing() {
         address:'',
         type:'rent',
         typeOfProp:'',
-        bedroom:1,
-        bathroom:1,
+        bedrooms:1,
+        bathrooms:1,
         squareFootage:1,
         regularPrice:10,
         offer:false,
@@ -144,7 +144,7 @@ export default function UpdateListing() {
         }
         
         //number of rooms
-        if(e.target.id === 'bedrooms' || e.target.id === 'bathrooms' ||e.target.id === 'regularPrice' ){
+        if(e.target.id === 'bedrooms' || e.target.id === 'bathrooms' ||e.target.id === 'regularPrice' ||e.target.id === 'squareFootage'){
             setFormData({
                 ...formData,
                 [e.target.id]:  parseInt(e.target.value),
@@ -292,8 +292,8 @@ export default function UpdateListing() {
                     <div className='flex items-center gap-3'>
                         <input type='number' id='bedrooms' className='p-3  border 
                         border-gray-300 rounded-lg' min='1' max='10' required
-                          value={formData.bedroom} 
                           onChange={handleChanger}
+                          value={formData.bedrooms} 
                         />
                         <p>BedRooms</p>
                     </div>
@@ -301,7 +301,7 @@ export default function UpdateListing() {
                         <input type='number' id='bathrooms' className='p-3 border 
                         border-gray-300 rounded-lg' min='1' max='10' required
                           onChange={handleChanger}
-                          value={formData.bathroom} 
+                          value={formData.bathrooms} 
                         />
                         <p>BathRooms</p>
                     </div>
@@ -309,8 +309,8 @@ export default function UpdateListing() {
                         <input type='number' id='squareFootage' 
                         className='p-3 w-20 sm:w-36 border 
                         border-gray-300 rounded-lg' min='1' max='' required
-                          value={formData.squareFootage} 
                           onChange={handleChanger}
+                          value={formData.squareFootage} 
                         />
                         <div className='flex flex-col items-center'>
                             <p>Square Footage</p>
@@ -321,8 +321,8 @@ export default function UpdateListing() {
                     <div className='flex  items-center gap-3'>
                         <input type='number' id='regularPrice' className='p-3 w-36 border 
                         border-gray-300 rounded-lg' min='1' max='99999999'  required
-                          value={formData.regularPrice} 
                           onChange={handleChanger}
+                          value={formData.regularPrice} 
                         />
                         <div className='flex flex-col items-center'>
                             <p>Regular price</p>

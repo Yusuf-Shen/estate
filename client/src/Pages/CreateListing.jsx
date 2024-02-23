@@ -18,8 +18,8 @@ export default function CreateListing() {
         address:'',
         type:'rent',
         typeOfProp:'',
-        bedroom:1,
-        bathroom:1,
+        bedrooms:1,
+        bathrooms:1,
         squareFootage:1,
         regularPrice:10,
         offer:false,
@@ -122,7 +122,7 @@ export default function CreateListing() {
         }
         
         //number of rooms
-        if(e.target.id === 'bedrooms' || e.target.id === 'bathrooms' ||e.target.id === 'regularPrice' ){
+        if(e.target.id === 'bedrooms' || e.target.id === 'bathrooms' ||e.target.id === 'regularPrice' ||e.target.id === 'squareFootage'  ){
             setFormData({
                 ...formData,
                 [e.target.id]:  parseInt(e.target.value),
@@ -271,37 +271,36 @@ export default function CreateListing() {
                     <div className='flex items-center gap-3'>
                         <input type='number' id='bedrooms' className='p-3  border 
                         border-gray-300 rounded-lg' min='1' max='10' required
-                          
                           onChange={handleChanger}
+                          value={formData.bedrooms}
                         />
                         <p>BedRooms</p>
                     </div>
                     <div className='flex items-center gap-3'>
                         <input type='number' id='bathrooms' className='p-3 border 
-                        border-gray-300 rounded-lg' min='1' max='10' required
-                          
+                        border-gray-300 rounded-lg' min='1' max='10' required 
                           onChange={handleChanger}
+                          value={formData.bathrooms}
                         />
                         <p>BathRooms</p>
                     </div>
-                    <div className='flex items-center gap-3'>
-                        <input type='number' id='squareFootage' 
-                        className='p-3 w-20 sm:w-36 border 
-                        border-gray-300 rounded-lg' min='1' max='' required
-                          
+                    <div className='flex  items-center gap-3'>
+                        <input type='number' id='squareFootage' className='p-3 w-36 border 
+                        border-gray-300 rounded-lg' min='1' max='99999999'  required
                           onChange={handleChanger}
+                          value={formData.squareFootage} 
                         />
                         <div className='flex flex-col items-center'>
                             <p>Square Footage</p>
                             <span className='text-xs'>(/m²)</span>
                         </div>
-                        
                     </div>
+                    {/* squareFootage Square Footage */}
                     <div className='flex  items-center gap-3'>
                         <input type='number' id='regularPrice' className='p-3 w-36 border 
                         border-gray-300 rounded-lg' min='1' max='99999999'  required
-                          value={formData.regularPrice} 
                           onChange={handleChanger}
+                          value={formData.regularPrice} 
                         />
                         <div className='flex flex-col items-center'>
                             <p>Regular price</p>
